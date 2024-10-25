@@ -3,6 +3,7 @@
 import express from 'express';
 import pino from 'pino-http';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
 import { env } from './utils/env.js';
 import { pinoHttpConfig } from './utils/config.js';
@@ -18,6 +19,7 @@ export const startServer = () => {
   const app = express();
 
   app.use(cors());
+  app.use(cookieParser());
   app.use(pino(pinoHttpConfig));
 
   app.use(router);
