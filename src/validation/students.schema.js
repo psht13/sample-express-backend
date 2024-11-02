@@ -23,5 +23,5 @@ export const createStudentSchema = Joi.object({
     'any.required': 'Average mark is required',
   }),
   onDuty: Joi.boolean(),
-  parentId: Joi.string().required(), // нова властивість
+  parentId: Joi.string().required(),
 });

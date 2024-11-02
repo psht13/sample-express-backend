@@ -24,6 +24,7 @@ export const studentSchema = new Schema(
       required: true,
       default: false,
     },
+    photo: { type: String },
     parentId: { type: Schema.Types.ObjectId, ref: 'users' },
   },
   { timestamps: true, versionKey: false },

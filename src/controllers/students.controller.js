@@ -10,6 +10,9 @@ import {
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
+import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
+import { env } from '../utils/env.js';
+import { saveFileToCloudinary } from '../utils/saveToCloudinary.js';
 
 export const getAllStudentsController = async (req, res) => {
   const { page, perPage } = parsePaginationParams(req.query);
@@ -47,7 +50,18 @@ export const getStudentByIdController = async (req, res, next) => {
 };
 
 export const createStudentController = async (req, res) => {
-  const student = await createStudent(req.body);
+  const photo = req.file;
+  let photoUrl;
+
+  if (photo) {
+    if (env('ENABLE_CLOUDINARY') === 'true') {
+      photoUrl = await saveFileToCloudinary(photo);
+    } else {
+      photoUrl = await saveFileToUploadDir(photo);
+    }
+  }
+
+  const student = await createStudent({ ...req.body, photo: photoUrl });
 
   res.status(201).json({
     status: 201,
@@ -71,9 +85,20 @@ export const deleteStudentController = async (req, res, next) => {
 
 export const upsertStudentController = async (req, res, next) => {
   const { studentId } = req.params;
-  const result = await updateStudent(studentId, req.body, {
-    upsert: true,
-  });
+  const photo = req.file;
+  let photoUrl;
+
+  if (photo) {
+    photoUrl = await saveFileToUploadDir(photo);
+  }
+
+  const result = await updateStudent(
+    studentId,
+    { ...req.body, photoUrl },
+    {
+      upsert: true,
+    },
+  );
 
   if (!result) throw createHttpError(404, 'Student not found');
 
@@ -88,7 +113,21 @@ export const upsertStudentController = async (req, res, next) => {
 
 export const patchStudentController = async (req, res, next) => {
   const { studentId } = req.params;
-  const result = await updateStudent(studentId, req.body, {});
+  const photo = req.file;
+
+  let photoUrl;
+
+  if (photo) {
+    photoUrl = await saveFileToUploadDir(photo);
+  }
+
+  const result = await updateStudent(
+    studentId,
+    { ...req.body, photoUrl },
+    {
+      upsert: true,
+    },
+  );
 
   if (!result) throw createHttpError(404, 'Student not found');
 

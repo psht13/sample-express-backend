@@ -1,8 +1,6 @@
-// src/middlewares/checkRoles.js
-
 import createHttpError from 'http-errors';
 
-import { StudentsCollection } from '../db/models/student.js';
+import { StudentsCollection } from '../db/models/students.model.js';
 import { ROLES } from '../constants/index.js';
 
 export const checkRoles =
