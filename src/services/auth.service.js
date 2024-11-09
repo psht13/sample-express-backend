@@ -6,7 +6,7 @@ import { randomBytes } from 'node:crypto';
 import {
   getFullNameFromGoogleTokenPayload,
   validateCode,
-} from '../utils/googleOAuth2.js';
+} from '../utils/googleOAuthClient.js';
 
 import { UsersCollection } from '../db/models/user.model.js';
 import { SessionsCollection } from '../db/models/session.js';

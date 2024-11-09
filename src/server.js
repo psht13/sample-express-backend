@@ -10,6 +10,7 @@ import router from './routers/index.js';
 
 import { errorHandler } from './middlewares/errorHandler.middleware.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.middleware.js';
+import { swaggerDocs } from './middlewares/swagger-docs.middleware.js';
 import { UPLOAD_DIR } from './constants/index.js';
 
 const PORT = env('PORT', 3000);
@@ -22,6 +23,7 @@ export const startServer = () => {
   app.use(pino(pinoHttpConfig));
 
   app.use('/uploads', express.static(UPLOAD_DIR));
+  app.use('/api-docs', swaggerDocs());
   app.use(router);
 
   app.use('*', notFoundHandler);
